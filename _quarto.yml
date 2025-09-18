@@ -1,0 +1,54 @@
+project:
+  type: website
+  output-dir: docs
+  resources: 
+    - FatherSonHeights.csv
+    - mammals.csv
+
+website:
+  title: "INST462 (Fall 2025)"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+  sidebar: 
+    style: "docked"
+    search: true
+    contents:
+      - section: "Preliminaries"
+        contents:
+        - href: installing_R_RStudio_Positron.qmd
+          text: "Installing R and RStudio/Positron"
+        - href: R_basics_packages.qmd
+          text: "Installing and loading R packages"
+      - section: "Working with data in R"
+        contents:
+        - href: R_basics_fundamentals.qmd
+          text: "Getting started with R"
+        - href: R_basics_vectors.qmd
+          text: "Vectors: a basic building block of data in R"
+        - href: R_basics_dataframes.qmd
+          text: "Data Frames: the most useful data structure in R"
+      - section: "Graphical Exploratory Data Analysis"
+        contents:
+        - href: under_construction.qmd
+          text: "work in progress"
+      #   - href: univariate_EDA.qmd
+      #     text: "Exploring single variables"
+      - section: "Special topics in R data and graphics"
+        contents:
+        - href: R_time_format_plot.qmd
+          text: "Time data: formatting and plotting"
+        - href: R_order_factors.qmd
+          text: "Ordering ordinal variables using factor levels"
+
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    css: styles.css
+    toc: true
+
+
+

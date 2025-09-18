@@ -1,0 +1,26 @@
+---
+title: "INST462: Introduction to Data Visualization"
+---
+
+# What's on this site
+
+Welcome! If you are registered for the Fall 2025 session of INST 462 (sections 201-203) at the University of Maryland, with Scott Jackson as your instructor, you are in the right place.
+
+This is where I am hosting the main tutorial materials for the course. Specifically, the pages on this site are intended to give you all the details you need in order to complete the weeky Practice exercises and Assignments.
+
+Other materials like the Practice exercises themselves, weekly Assignments, data files, etc. are available on the official course site on ELMS.
+
+# How to use this site
+
+- The navigation is mainly on the left-hand side. The selections are grouped roughly by content themes, but you are encouraged to hop around to review topics as needed.
+- Once you're on a page, there should be a list of sections on the right hand side to help you navigate. I'm hoping this is helpful when you want to return to a section for review.
+- All of these materials are intended to be read through from beginning to end (though of course you can take breaks). If you try to skip around and read sections out of order, it might not make as much sense.
+- I will be adding material and additional resources as we go through the course, so this is still a work in progress.
+- There's a little toggle in the upper right if you want to switch between light and dark color schemes.
+
+# Code and Code Tutorials
+
+- This site is created using [Quarto](https://quarto.org/), which means the pages are mostly written in a flavor of [R Markdown](https://rmarkdown.rstudio.com/).
+- This also means there will be sections of code and results in most of the tutorials.
+- You should be running all of the code yoruself on your own machine as you work through the material.
+- You can either copy & paste the code from this site, or you can just download the `.qmd` source files, either by cloning this entire repository off of GitHub, or by visiting the course site on ELMS and downloading them from the *Modules* section of that site.

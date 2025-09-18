@@ -1,0 +1,6 @@
+*~
+.Rhistory
+/_site/
+/.quarto/
+data_to_ignore/
+
