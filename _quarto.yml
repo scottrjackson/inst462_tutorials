@@ -31,16 +31,18 @@ website:
           text: "Data Frames: the most useful data structure in R"
       - section: "Graphical Exploratory Data Analysis"
         contents:
-        - href: under_construction.qmd
-          text: "work in progress"
-      #   - href: univariate_EDA.qmd
-      #     text: "Exploring single variables"
+        - href: ggplot2_basics.qmd
+          text: "Getting started with the ggplot2 package"
+        - href: univariate_EDA.qmd
+          text: "Exploring single variables"
       - section: "Special topics in R data and graphics"
         contents:
         - href: R_time_format_plot.qmd
           text: "Time data: formatting and plotting"
         - href: R_order_factors.qmd
           text: "Ordering ordinal variables using factor levels"
+#        - href: under_construction.qmd
+#          text: "work in progress"
 
 format:
   html:
