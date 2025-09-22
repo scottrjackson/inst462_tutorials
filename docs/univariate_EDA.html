@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -72,11 +107,40 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar docked nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar docked nav-fixed slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -399,12 +463,29 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section"></a></li>
+  <li><a href="#the-first-steps-of-exploratory-data-analysis" id="toc-the-first-steps-of-exploratory-data-analysis" class="nav-link active" data-scroll-target="#the-first-steps-of-exploratory-data-analysis">The first steps of exploratory data analysis</a></li>
+  <li><a href="#loading-packages-and-some-sample-data" id="toc-loading-packages-and-some-sample-data" class="nav-link" data-scroll-target="#loading-packages-and-some-sample-data">Loading packages and some sample data</a></li>
+  <li><a href="#a-starting-point-what-values-are-present" id="toc-a-starting-point-what-values-are-present" class="nav-link" data-scroll-target="#a-starting-point-what-values-are-present">A starting point: what values are present?</a>
+  <ul class="collapse">
+  <li><a href="#starting-with-points" id="toc-starting-with-points" class="nav-link" data-scroll-target="#starting-with-points">Starting with points</a></li>
+  <li><a href="#interpreting-points-for-continuous-values" id="toc-interpreting-points-for-continuous-values" class="nav-link" data-scroll-target="#interpreting-points-for-continuous-values">Interpreting points for continuous values</a></li>
+  <li><a href="#examining-points-in-categorical-data" id="toc-examining-points-in-categorical-data" class="nav-link" data-scroll-target="#examining-points-in-categorical-data">Examining points in categorical data</a></li>
+  </ul></li>
+  <li><a href="#the-next-step-distributions" id="toc-the-next-step-distributions" class="nav-link" data-scroll-target="#the-next-step-distributions">The next step: distributions</a>
+  <ul class="collapse">
+  <li><a href="#counting-categories" id="toc-counting-categories" class="nav-link" data-scroll-target="#counting-categories">Counting categories</a></li>
+  <li><a href="#plotting-continuous-distributions" id="toc-plotting-continuous-distributions" class="nav-link" data-scroll-target="#plotting-continuous-distributions">Plotting continuous distributions</a>
+  <ul class="collapse">
+  <li><a href="#binning-with-histograms" id="toc-binning-with-histograms" class="nav-link" data-scroll-target="#binning-with-histograms">Binning with histograms</a></li>
+  </ul></li>
+  <li><a href="#density-plots-are-a-complementary-tool-to-histrograms" id="toc-density-plots-are-a-complementary-tool-to-histrograms" class="nav-link" data-scroll-target="#density-plots-are-a-complementary-tool-to-histrograms">Density plots are a complementary tool to histrograms</a></li>
+  </ul></li>
+  <li><a href="#what-to-learn-from-univariate-eda" id="toc-what-to-learn-from-univariate-eda" class="nav-link" data-scroll-target="#what-to-learn-from-univariate-eda">What to learn from univariate EDA</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ggplot2_basics.html">Graphical Exploratory Data Analysis</a></li><li class="breadcrumb-item"><a href="./univariate_EDA.html">Exploring single variables</a></li></ol></nav>
@@ -426,11 +507,379 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="section" class="level1">
-<h1></h1>
+<section id="the-first-steps-of-exploratory-data-analysis" class="level1">
+<h1>The first steps of exploratory data analysis</h1>
+<p>As Tukey originally framed it, exploratory data analysis is about detective work – looking for clues, examining data for patterns, compiling evidence. And one of the first steps of this detective work is to examine the individual variables in your data. This is like getting a few of the ground facts before you start looking for leads. Another way to think about it is that carefully looking at each of the variables in your data set can give you a kind of first pass understanding that may help you find interesting patterns, or perhaps even more importantly, alert you to issues before you go too far in pursuing a particilar line of investigation.</p>
+<p>This tutorial will take you through some of this process, focusing on the kinds of questions you should be asking as you investigate, and a few data visualization tools that can help. This is not exhaustive. Since EDA is exploratory by nature, there will always be other things to consider and additional tools depending on what you are looking at and what your goals are. But the questions and tools here should give you a solid start in the process.</p>
+</section>
+<section id="loading-packages-and-some-sample-data" class="level1 page-columns page-full">
+<h1>Loading packages and some sample data</h1>
+<p>In this tutorial, we’ll use packages from the Tidyverse, as well as the <code>scales</code> package. We will also use a sample data set which is a slightly modified version of the <code>mammals</code> data set.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This data set is originally from Weisberg (1985), supplied in the <code>MASS</code> package (Venables &amp; Ripley, 2002). I’ve added a <code>diet</code> column, and put the species in an actual column, instead of the data frame from <code>MASS</code> which uses row names to store species.</p></div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.2.1
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.0.4     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'scales'
+
+The following object is masked from 'package:purrr':
+
+    discard
+
+The following object is masked from 'package:readr':
+
+    col_factor</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mammals <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"mammals.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 62 Columns: 4
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (2): species, diet
+dbl (2): body, brain
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+</section>
+<section id="a-starting-point-what-values-are-present" class="level1 page-columns page-full">
+<h1>A starting point: what values are present?</h1>
+<p>As a first step, one of the most basic things to know about each of your variables is what kinds of values you have. You should investigate this from both “kind” and “observed” angles. What I mean by that is you should see what <em>kind</em> of values you have (numeric? character? factor? geographic? time stamp? something else?) and then you should look at what values are actually <em>observed</em>. A quick visualization may help with both of these. The key is to have a clear sense of what you are plotting, so that you can interpret what you see.</p>
+<section id="starting-with-points" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="starting-with-points">Starting with points</h2>
+<p>There are many different basic kinds of visualizations,<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> and you may eventually gravitate towards certain ones as you get more practiced in the EDA process. But if you are really not sure, then simply plotting <em>points</em> may be a good initial place to start.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Munzner (2014) uses the term <em>idiom</em> for a general type of plot. I think that’s a good term, as a way of capturing the fact that, for example, everything we call a “scatterplot” has some basic things in common, but not all scatterplots share all of the same features. Some <em>geoms</em> in <code>ggplot2</code> correspond to idioms, like <code>geom_histogram()</code>, but others are a little more basic or flexible, like <code>geom_bar()</code>, and might map to a few related idioms. The point is that there is not a one-to-one relationship between these different labels that we apply to “kinds of visualizations.”</p></div></div><p>Why points? When you are starting to visualize your data, one guiding principle is to try to visualize <em>every</em> data point. If you are visualizing a variable, that variable is a column of values in a data frame, and you should be trying to get a feel for the data by looking at <em>each</em> value, not just a summary like a mean or range. The nice thing about plotting points is that you know that there should be a <em>visual</em> point/dot for each <em>data</em> point.</p>
+<p>In <code>ggplot2</code>, we can use <code>geom_point()</code> for this, but this geom requires both <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> coordinates. So if we are plotting points for a single variable, we would map that variable to either <span class="math inline">\(x\)</span> or <span class="math inline">\(y\)</span>, and then map the other coordinate to either a constant like zero, or something arbitrary like row number or even a random number.</p>
+<p>Given all this, let’s start our investigation of the <code>mammals</code> data by plotting the <code>body</code> variable on the <span class="math inline">\(x\)</span>-axis vs.&nbsp;just a flat zero value on thje <span class="math inline">\(y\)</span>-axis. This variable represents an average body weight (in kilograms) for each of the species in the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body, <span class="dv">0</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="interpreting-points-for-continuous-values" class="level2">
+<h2 class="anchored" data-anchor-id="interpreting-points-for-continuous-values">Interpreting points for continuous values</h2>
+<p>What does this show us? First of all, by looking at the <span class="math inline">\(x\)</span>-axis, we can see that the values range from close to zero to larger than 6,000. Second of all, we can tell that this is a <em>continuous</em> numerical value, because we can see that many points are close to other points, but they are not arranged in some kind of strict grid. In other words, it looks like any numeric values are possible, in a pretty wide (but apparently positive) range. This is all good, because it confirms what we would expect from a variable representing weight. If all of the animals were categorized at having weights rounded to the nearest 100 kg, or if we saw negative values, or values in the tens or hundreds of thousands, we might have more questions, and we might realize there’s either something wrong with the data, or maybe it’s not being represented like we thought.</p>
+<p>In other words, even just a simple plot like this is important for us to test our assumptions about this data. Does this pattern look plausible as a set of weight values (in kg)? Yes! Confirming basic assumptions is a key first step in EDA.</p>
+<p>While we’re at it, let’s look at the other weight variable, the <code>brain</code> variable, which is supposed to represent the average brain weight (in grams, not kilograms).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(brain, <span class="dv">0</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>How does this look?</p>
+</section>
+<section id="examining-points-in-categorical-data" class="level2">
+<h2 class="anchored" data-anchor-id="examining-points-in-categorical-data">Examining points in categorical data</h2>
+<p>But what about a different kind of variable, like <code>diet</code> or <code>species</code>? Let’s try the same point plot for <code>diet</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(diet, <span class="dv">0</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we see just three dots, and the <span class="math inline">\(x\)</span>-axis doesn’t show a range of numeric values, but three specific labels: “carnivore”, “herbivore”, and “omnivore”. This is very different from the visualization of weight. The first thing to notice is that this is categorical data, which should be obvious from the category labels and lack of numeric values. Second, we should notice that even though this should be plotting a different point for each data point, we only see three dots. Why?</p>
+<p>This is a common problem called <em>overplotting</em>, and we will discuss strategies for managing this later. But the idea is that it only <em>looks</em> like three dots, because each of the data points is plotted in one of three positions. So there are basically a bunch of dots being plotted on top of each other, so you can’t tell how many there are. This is true whenever there is <em>any</em> degree of discreteness in the data. For example, if values are all rounded off to some degree, there might be many identical values, even in a variable that is theoretically continuous, like weight or height. But overplotting is especially prominent when you have only a few possible values, like with the <code>diet</code> variable here.</p>
+<p>So what did we learn with this visualization? That there are three categories of diet, and every data point falls into one of those three. Why is this helpful? Again, this is a good check of assumptions. Maybe we weren’t sure what “diet” meant, and thought that maybe it would be specific plants or prey or something. Or maybe it should just be these three categories, but data entry problems ended up with mistaken values like “ominvore” or abbreviations like “herb”. In those cases, maybe we’d need to do some additional data cleaning before analysis.</p>
+<p>Looking for this kind of basic issue is an important step before we can start looking for more interesting patterns, and even just a simple point plot like this can help us.</p>
+<p>Now if we do the same thing with <code>species</code>, we have kind of the opposite problem:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(species, <span class="dv">0</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we see a <em>lot</em> of points, but the <span class="math inline">\(x\)</span>-axis labels are so crammed together that it’s hard to tell what’s even being plotted. One simple trick for making things like axis labels easier to read is to simply flip the coordinates. Let’s put <code>species</code> on the <span class="math inline">\(y\)</span>-axis to make those labels more legible, and set <span class="math inline">\(x\)</span> to zero.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(<span class="dv">0</span>, species)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we have a much clearer picture. There are many species in this data! This matches what I said earlier, that each row of the data is a different species, so there should be only one data point per variable per species. But again, overplotting means that we can’t tell if this is true yet, because it’s possible that some species have many points, and they are just on top of each other. Still, we have verified that there are many species in the data, and those species names look like the kind of thing we would expect.</p>
+</section>
+</section>
+<section id="the-next-step-distributions" class="level1 page-columns page-full">
+<h1>The next step: distributions</h1>
+<p>Once we know what kinds of values there are, the next natural questions are about how those values are <em>distributed</em>. In other words, which values are more common than others? This is an important follow-up for several reasons, as we’ll see.</p>
+<p>This time, let’s start by looking at the distributions of our categorical variables, <code>species</code> and <code>diet</code>.</p>
+<section id="counting-categories" class="level2">
+<h2 class="anchored" data-anchor-id="counting-categories">Counting categories</h2>
+<p>When you are talking about a distribution of categorical data, that boils down to a question of how many occurrences there are of each category. In <code>ggplot</code>, this is where the <code>geom_bar()</code> layer is helpful. Instead of displaying a bar for each data point, this will display a bar for each <em>distinct category</em>, but it will also count up the occurrences of each category, and set the height of the bar equal to that count.</p>
+<p>This means we only need to give either an <span class="math inline">\(x\)</span> or <span class="math inline">\(y\)</span> value in our <code>aes()</code> mapping, and <code>geom_bar()</code> does the rest.</p>
+<p>Let’s look first at <code>species</code>. I’ll start with a plot of <code>species</code> on the <span class="math inline">\(x\)</span>-axis, but for the same reason as before, it helps us to switch that up to be on the <span class="math inline">\(y\)</span>-axis, which is plotted second.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(species)) <span class="sc">+</span> <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(<span class="at">y =</span> species)) <span class="sc">+</span> <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now what do we see? First, the bars all look uniform, which means that for each value of <code>species</code>, there is the same number of data points. Furthermore, we can see that all of those bars go up to a value of 1. So this just confirms what we believed, where each species is represented only once in the data set. Again, this makes for a very boring-looking plot, but it is helping us confirm the structure of the data in a quick and visual way.</p>
+<p>To contrast this, let’s use the same technique on <code>diet</code> (putting it back on the <span class="math inline">\(x\)</span>-axis, since we know there are only a few categories).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(diet)) <span class="sc">+</span> <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, instead of having that overplotting issue where we couldn’t see how many dots were on top of each other, these bars are able to clearly show how the data are split into these three categories. Omnivores and herbivores are represented in similar amounts (though there’s one or two more herbivores), but both are represented much more thanb carnivores.</p>
+<p>Is this an important observation or clue in our detective work? It depends! Maybe this raises questions about how the data was gathered, or whether it over-represents some kinds of mammals vs.&nbsp;others, or maybe based on other knowledge it simply confirms that the data matches an expectation than carnivores are less common. Or maybe it doesn’t mean anything. Not every piece of information in an investigation is a “clue” to some interesting pattern! Sometimes it’s just good to know the basic facts, in case something becomes relevant later.</p>
+<p>A more practical point here is that if you already know some variable is categorical, maybe starting with <code>geom_bar()</code> is a better idea than <code>geom_point()</code>, since we can see both the categories and the associated counts all at once.</p>
+</section>
+<section id="plotting-continuous-distributions" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="plotting-continuous-distributions">Plotting continuous distributions</h2>
+<p>What about our other variables, <code>body</code> and <code>brain</code>? Since these variables appear to be continuous, plots of <em>counts</em> are rarely helpful. In other words, when values can vary continuously, unless there is a very large amount of data, or unless there is a lot of “rounding off” in the values, it can be relatively unlikely that any two data points can have the same values.</p>
+<p>We can see this in the current data if we force the <code>body</code> variable to be categorical by plotting it as a factor<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> (and plotting on the <span class="math inline">\(y\)</span> axis to make the labels legible).</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;Note that when you apply a transformation or function to a variable inside of a <code>ggplot()</code> call, this does not actually alter the original data frame. So it’s a convenient way to visualize transformations without having to alter the underlying data frame any.</p></div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">as.factor</span>(body))) <span class="sc">+</span> <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see here that there are exactly two values that happen to be repeated: the weight 3.5 occurs twice and the weight 0.023 occurs twice. But unless you specifically want to know if any specific values repeat exactly, this kind of bar plot is not very helpful.</p>
+<p>Recall the “point” plot again:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body, <span class="dv">0</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see an overall pattern where most of the points are concentrated at lower values, and only a couple of points extend past 1,000 kg. When we talk about <em>distributions</em> of continuous values, this is what we want to know: where in the range are the data more or less concentrated? In other words, what is the <em>shape</em> of the distribution?</p>
+<section id="binning-with-histograms" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="binning-with-histograms">Binning with histograms</h3>
+<p>One classic way to examine the distribution shape of continuous values is to use a <em>binning</em> technique. That is, we can designate narrower sub-ranges of the data – say, every few kilograms – and in each of these <em>bins</em>, we can count up how many data points fall in that range. We can then plot these binned counts as bar plots, and the result is a <em>histogram</em>.</p>
+<p>Let’s look at default histogram using <code>geom_histogram()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_histogram</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see a very tall bar close to zero, and then two much shorter bars, followed by two short bars spaced further out. This indicates what we could partially see in the point plots, that nearly all of the body weight values are clumped at the low end of the range, with a very rapid drop-off of concentration at higher weights.</p>
+<p>One challenge with histograms is determining the <em>bin width</em>. However, because different bin widths can reveal different things, there is rarely one “correct” bin width, and it is often a good idea to examine a few different widths.</p>
+<p>In <code>ggplot2</code>, the default is to set the bin width such that it divides the data into thirty bins. This is a reasonable middle-ground default, but <code>ggplot2</code> likes to remind us that this is just a default, and that we should investigate others. This is good advice.</p>
+<p>In this particular data, we’re not likely to see much difference, since the data is so highly concentrated in the bottom part of the range. For example, we could narrow the bins to every 10 kg using the following code, and we’d still see most of the data concentrated in a single bin at the bottom of the range:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>What we really need to do here is to transform our data first. We will discuss transformations more throughly elsewhere, so I will simply apply a transformation and label-adjustment to plot the same data on a (base-10) logarithmic scale:<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Logarithmic transforms are often good ideas when the data is highly right-skewed like it is here, but also when the data is all more positive than zero, and when larger values are at least several orders of magnitude larger than smaller values.</p></div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_histogram</span>() <span class="sc">+</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now we can see an entirely different shape! With the log transform, the data is almost looking close to a normal distribution. However, we may still want to experiment with bin widths. We just need to specify those widths on a “log kilogram” scale rather than a kilogram scale. This first plot has wider bins:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This next plot has somewhat narrower bins:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.1</span>) <span class="sc">+</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And this last plot’s bins are (in my opinion) much too narrow:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.01</span>) <span class="sc">+</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Nevertheless, looking at different bin widths can give you a healthy perspective, preventing you from fixating too much on a pattern that may be at least in part an artifact or illusion dependent on the bin widths.</p>
+</section>
+</section>
+<section id="density-plots-are-a-complementary-tool-to-histrograms" class="level2">
+<h2 class="anchored" data-anchor-id="density-plots-are-a-complementary-tool-to-histrograms">Density plots are a complementary tool to histrograms</h2>
+<p>Particularly when the data is relatively sparse, histograms can seem like they over-emphasize gaps or small differences in distribution shape. Another way to visualize univariate distributions is with a <em>density</em> plot. In practical terms, you can think about a density plot as a kind of “smoothed” histogram. More literally, a density plot is a version of a <em>probability</em> density plot, where the values on the <span class="math inline">\(y\)</span>-axis are scaled so that the area under the density curve sums to 1. The shape of the curve still reflects the concentration of values, but it is calculated according to a more complex algorithm than the simple binning of histograms.</p>
+<p>Let’s look at a density plot of the (log transformed) body weight variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As you can see, it’s a much “smoother” shape, but it still follows the same contours. If you would like to plot a histrogram and density plot superimposed on each other, you need to apply a special transformation to the <span class="math inline">\(y\)</span> values in the histogram. Essentially, you need to put the histogram on the same scale as the density plot, otherwise one or the other may not be visible at all.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="annotated-cell-21"><pre class="sourceCode r code-annotation-code code-with-copy code-annotated"><code class="sourceCode r"><span id="annotated-cell-21-1"><a href="#annotated-cell-21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> </span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-21" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-21-2" class="code-annotation-target"><a href="#annotated-cell-21-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density))) <span class="sc">+</span></span>
+<span id="annotated-cell-21-3"><a href="#annotated-cell-21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
+<span id="annotated-cell-21-4"><a href="#annotated-cell-21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-annotation">
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-21" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-21" data-code-lines="2" data-code-annotation="1">Note that using the <code>after_stat(density)</code> construct is the currently recommended method in <code>ggplot2</code>. Older examples may show a different construction that looks like <code>y = ..density..</code>, but <code>ggplot2</code> warns us that this is deprecated, and may be removed later as an option.</span>
+</dd>
+</dl>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can improve how this superimposition looks if we alter the histogram bin widths, and change the histogram color to a lighter shade of gray.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density)), </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">binwidth =</span> .<span class="dv">67</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">fill =</span> <span class="st">"gray"</span>) <span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_density</span>() <span class="sc">+</span> </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This plot is just to illustrate what I meant when I said that a density plot is like a “smoothed” histogram; they both show the same overall patterns, even though histograms typically look more “jagged” or “noisy”.</p>
+<p>Finally, you can also change how “noisy” a density plot looks, roughly analogous to changing the binwidth in a histogram. The parameter in <code>ggplot2</code> is called <code>adjust</code>. It defaults to a value of 1, so if you want to “smooth over” ups and downs even more, you can increase the value above 1, and if you want it to look more “fine-grained”, you can decrease the value, though <code>adjust</code> always needs to be larger than zero.</p>
+<p>Here are examples of smaller and larger <code>adjust</code> values:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">adjust =</span> .<span class="dv">2</span>) <span class="sc">+</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mammals, <span class="fu">aes</span>(body)) <span class="sc">+</span> <span class="fu">geom_density</span>(<span class="at">adjust =</span> <span class="fl">1.5</span>) <span class="sc">+</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">transform =</span> <span class="st">"log10"</span>, <span class="at">labels =</span> <span class="fu">label_comma</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="univariate_EDA_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="what-to-learn-from-univariate-eda" class="level1">
+<h1>What to learn from univariate EDA</h1>
+<p>Examining univariate distributions is an essential first step, but what exactly you are looking for can vary radically depending on the data and your goals. For example, here we saw that the distribution of body weight was much closer to a normal (aka Gaussian) distribuition after log-transformation, but even then, there appears to be a “shoulder” of sorts on the right side of the distribution. What should we make of this? At this stage, maybe nothing, other than noting the observation. We don’t really know anything about how these species were selected, so would we even care if the distribution is normal or not?</p>
+<p>It’s often the case that looking at univariate distributions doesn’t really give you any “clues”, in the sense of revealing exciting patterns. But that doesn’t mean it’s not important. Sometimes “boring” is what you are hoping for, because if we saw something truly suprising, like negative weight values, or diet categories that looked like typos, that means we might need to do some data cleaning before proceeding.</p>
+<p>So even if investigating univariate distributions can sometimes feel like “janitorial” work, it is still essential to a good investigation. What if something had contaminated a crime scene and the detectives didn’t check before arresting the wrong person?</p>
+<p>But sometimes, univariate distributions can reveal more subtle, interesting patterns that warrant follow-up investigation. You’ll never know what you’ll find, which is why you always need to look!</p>
 
 
 </section>
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
